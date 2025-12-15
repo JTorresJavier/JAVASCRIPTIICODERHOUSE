@@ -1,18 +1,19 @@
 const bcrypt = require('bcrypt');
 
-// Encripta contraseña en texto plano usando hashSync
+// Hashea password plano
 const createHash = (passwordPlain) => {
   const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(passwordPlain, salt);
-  return hash;
+  return bcrypt.hashSync(passwordPlain, salt);
 };
 
-// Compara contraseña en texto plano vs hash almacenado en el usuario
+// Compara password plano vs hash del user
 const isValidPassword = (passwordPlain, user) => {
   return bcrypt.compareSync(passwordPlain, user.password);
 };
 
-module.exports = {
-  createHash,
-  isValidPassword
+// Para el reset: comparar un password nuevo con hash viejo (sin necesitar user entero)
+const comparePasswordPlainWithHash = (passwordPlain, hash) => {
+  return bcrypt.compareSync(passwordPlain, hash);
 };
+
+module.exports = { createHash, isValidPassword, comparePasswordPlainWithHash };
